@@ -1,17 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { FeedPostEntity } from 'src/feed/models/post.entity';
 import { Repository, UpdateResult, DeleteResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FeedPost } from 'src/feed/models/post.interface';
 import { Observable, from } from 'rxjs';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { User } from 'src/auth/models/user.interface';
+import { UserEntity } from 'src/auth/models/user.entity';
 @Injectable()
 export class FeedService {
   constructor(
     @InjectRepository(FeedPostEntity)
     private readonly feedPostRepository: Repository<FeedPostEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  createPost(feedPost: FeedPost): Observable<FeedPost> {
+  async createPost(user: User, feedPost: FeedPost) {
+    const { email } = user;
+    const userDetail = await this.userRepository.findOne({
+      where: {
+        email: email,
+      },
+    });
+    feedPost.author = userDetail;
     return from(this.feedPostRepository.save(feedPost));
   }
 
