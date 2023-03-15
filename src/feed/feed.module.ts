@@ -3,9 +3,10 @@ import { FeedService } from './services/feed/feed.service';
 import { FeedController } from './controllers/feed/feed.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FeedPostEntity } from './models/post.entity';
+import { UserEntity } from 'src/auth/models/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([FeedPostEntity])],
+  imports: [TypeOrmModule.forFeature([FeedPostEntity, UserEntity])],
   providers: [FeedService],
   controllers: [FeedController],
 })
