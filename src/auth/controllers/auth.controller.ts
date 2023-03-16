@@ -9,14 +9,11 @@ export class AuthController {
 
   @Post('register')
   register(@Body() user: User) {
-    console.log('register Controller');
-
     return this.authService.registerAccoutnt(user);
   }
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  // login(@Body() user: User) {
   async login(@Request() req) {
     const result = await this.authService.login(req.user);
     const token = {
