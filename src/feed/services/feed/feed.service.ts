@@ -47,4 +47,14 @@ export class FeedService {
       }),
     );
   }
+
+  async findPostById(id: number) {
+    const post = await this.feedPostRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: ['author'],
+    });
+    return post;
+  }
 }
