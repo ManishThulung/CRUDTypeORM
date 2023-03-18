@@ -18,12 +18,13 @@ import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/models/role.enum';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { IsCreatorGuard } from 'src/feed/guards/is-creator.guard';
 
 @Controller('feed')
 export class FeedController {
   constructor(private feedServices: FeedService) {}
 
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.PREMIUM)
   @UseGuards(JwtGuard, RolesGuard)
   @Post('create')
   create(@Body() feedPost: FeedPost, @Request() req) {
@@ -44,6 +45,7 @@ export class FeedController {
     return this.feedServices.findPosts(take, skip);
   }
 
+  @UseGuards(JwtGuard, IsCreatorGuard)
   @Put(':id')
   update(
     @Param('id') id: number,
@@ -52,6 +54,7 @@ export class FeedController {
     return this.feedServices.updatePost(id, feedPost);
   }
 
+  @UseGuards(JwtGuard, IsCreatorGuard)
   @Delete(':id')
   delete(@Param('id') id: number): Observable<DeleteResult> {
     return this.feedServices.deletePost(id);
