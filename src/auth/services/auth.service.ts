@@ -67,16 +67,4 @@ export class AuthService {
       }),
     };
   }
-
-  async findUserById(id: number) {
-    const user = await this.userRepository.findOne({
-      where: {
-        id: id,
-      },
-      relations: ['feedPosts'],
-    });
-
-    const { password, ...results } = user;
-    return results;
-  }
 }

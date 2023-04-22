@@ -9,6 +9,8 @@ import { JwtStrategy } from './guards/jwt.strategy';
 import { LocalStrategy } from './guards/local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { RolesGuard } from './guards/roles.guard';
+import { UserService } from './services/user.service';
+import { UserController } from './controllers/user.controller';
 
 @Module({
   imports: [
@@ -21,8 +23,15 @@ import { RolesGuard } from './guards/roles.guard';
     TypeOrmModule.forFeature([UserEntity]),
     PassportModule,
   ],
-  providers: [AuthService, JwtGuard, JwtStrategy, LocalStrategy, RolesGuard],
-  controllers: [AuthController],
+  providers: [
+    AuthService,
+    JwtGuard,
+    JwtStrategy,
+    LocalStrategy,
+    RolesGuard,
+    UserService,
+  ],
+  controllers: [AuthController, UserController],
   exports: [AuthService],
 })
 export class AuthModule {}
